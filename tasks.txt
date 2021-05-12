@@ -1,0 +1,7 @@
+Beginning work:
+
+1. Create Structure
+2. Create Adjacency matrix and appropriate pointers for current size filled
+3. Functions to add/remove an edge based on Names
+4. Functions to add/remove an edge based on ID
+5. Display all friends of a given person(based on name/id)
