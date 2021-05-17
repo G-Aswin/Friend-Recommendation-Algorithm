@@ -40,7 +40,7 @@ void display(user P)
 }
 
 
-void add_edge(struct people matrix[][100], user from, user to)
+void add_edge(int matrix[][100], user from, user to)
 {
     //adds the edge from adjacency matrix
     //"from" will be following "to" after this
@@ -52,7 +52,7 @@ void add_edge(struct people matrix[][100], user from, user to)
     to->followers += 1;
 }
 
-void remove_edge(struct people matrix[][100], user from, user to)
+void remove_edge(int matrix[][100], user from, user to)
 {
     //remove the edge from adjacency matrix
     //"from" will no longer be following "to" after this
@@ -66,7 +66,7 @@ void remove_edge(struct people matrix[][100], user from, user to)
 
 void convert_to_lower(char *name)
 {
-    for (int i = 0; i < strlen(username); i++)
+    for (int i = 0; i < strlen(name); i++)
     {
         name[i] = tolower(name[i]);
     }
@@ -93,7 +93,7 @@ int find_user_index(struct people data[], int accounts, char *username)
     return -1;
 }
 
-void display_connections(struct people matrix[][100], struct people data[], int accounts, user x)
+void display_connections(int matrix[][100], struct people data[], int accounts, user x)
 {
     //print all the names of connections of a user x
     printf("\nFollowing : ");
@@ -114,7 +114,7 @@ void display_connections(struct people matrix[][100], struct people data[], int 
 int main()
 {
     struct people database[100];                        //array of struct which actually holds user data
-    struct people adjacency_matrix[100][100] = {0}     //adjacency matrix storing the edge data
+    int adjacency_matrix[100][100] = {0};     //adjacency matrix storing the edge data
     int active_accounts = 0;       // number of active accounts
 
 
