@@ -2,8 +2,6 @@
 #include<stdlib.h>
 #include<string.h>
 #include<ctype.h>
-
-
 struct people
 {
     int id;
@@ -15,6 +13,34 @@ struct people
     int followers, following;
 };
 typedef struct people *user;
+
+//function prototypes
+void accept(user P);
+void display(user P);
+void add_edge(int matrix[][100], user from, user to);
+void remove_edge(int matrix[][100], user from, user to);
+void convert_to_lower(char *name);
+int find_user_index(struct people data[], int accounts, char *username);
+void display_connections(int matrix[][100], struct people data[], int accounts, user x);
+int isNotFollowingAnyone(user x, int matrix[][100], int accounts);
+void bfs_with_distance(int matrix[][100], struct people data[], int accounts, user x, int limit);
+
+int main()
+{
+    struct people database[100];                        //array of struct which actually holds user data
+    int adjacency_matrix[100][100] = {0};     //adjacency matrix storing the edge data
+    int active_accounts = 0;       // number of active accounts
+
+
+
+
+
+
+    struct people P;
+    accept(&P);
+    display(&P);
+    return 0;
+}
 
 void accept(user P)
 {
@@ -169,21 +195,4 @@ void bfs_with_distance(int matrix[][100], struct people data[], int accounts, us
         }
     }
 
-}
-
-int main()
-{
-    struct people database[100];                        //array of struct which actually holds user data
-    int adjacency_matrix[100][100] = {0};     //adjacency matrix storing the edge data
-    int active_accounts = 0;       // number of active accounts
-
-
-
-
-
-
-    struct people P;
-    accept(&P);
-    display(&P);
-    return 0;
 }
