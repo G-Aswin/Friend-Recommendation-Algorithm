@@ -10,7 +10,7 @@ struct people
     int age;
     char city[100];
 
-    int followers, following;
+    int friends;
 };
 typedef struct people *user;
 
@@ -31,23 +31,206 @@ int main()
     int adjacency_matrix[100][100] = {0};     //adjacency matrix storing the edge data
     int active_accounts = 0;       // number of active accounts
 
+    char name1[100], name2[100];   
 
 
+    int ch, n, idx1, idx2, lim;
+    while (1)
+    {
+        printf("\n***USER MENU***\n");
+        printf("\n1. Create account(s)");
+        printf("\n2. Add a new connection/friend");
+        printf("\n3. Remove a connection/friend");
+        printf("\n4. Display all friends");
+        printf("\n5. **Recommend Friends**");
 
+        printf("\n\n: ");
+        scanf("%d", &ch);
 
+        switch(ch)
+        {
+            case 1: printf("\nNumber of account(s) to enter? : ");
+                    scanf("%d", &n);
 
-    struct people P;
-    accept(&P);
-    display(&P);
-    return 0;
+                    for (int i = 0; i < n; i++)
+                    {
+                        printf("\n%dth entry : \n", i);
+                        accept(&database[active_accounts++]);
+                    }
+                    break;
+
+            case 2: printf("\nAccount choices by name(1) or id(2)? Enter choice : ");
+                    scanf("%d", &n);
+                    if (ch == 1)
+                    {
+                        printf("\nUsername 1 : ");
+                        scanf("%[^\n]s", name1);
+                        printf("\nUsername 2 : ");
+                        scanf("%[^\n]s", name2);
+
+                        idx1 = find_user_index(database, active_accounts, name1);
+                        idx2 = find_user_index(database, active_accounts, name2);
+
+                        if (idx1 == -1 || idx2 == -1)
+                        {
+                            printf("\nEither or both usernames not found!");
+                            break;
+                        }
+
+                        add_edge(adjacency_matrix, &database[idx1], &database[idx2]);
+                        printf("\nConnection made successfully!");                        
+                    }
+                    else if (ch == 2)
+                    {
+                        printf("\nEnter the account ID for both users : ");
+                        scanf("%d %d", &idx1, &idx2);
+
+                        if (idx1 >= active_accounts || idx2 >= active_accounts)
+                        {
+                            printf("\nEither or both ID's not found!");
+                            break;
+                        }
+
+                        add_edge(adjacency_matrix, &database[idx1], &database[idx2]);
+                        printf("\nConnection made successfully!");   
+                    }
+                    else
+                    {
+                        printf("\nInvalid choice.");
+                    }
+                    break;
+                    
+            case 3: printf("\nAccount choices by name(1) or id(2)? Enter choice : ");
+                    scanf("%d", &n);
+                    if (ch == 1)
+                    {
+                        printf("\nUsername 1 : ");
+                        scanf("%[^\n]s", name1);
+                        printf("\nUsername 2 : ");
+                        scanf("%[^\n]s", name2);
+
+                        idx1 = find_user_index(database, active_accounts, name1);
+                        idx2 = find_user_index(database, active_accounts, name2);
+
+                        if (idx1 == -1 || idx2 == -1)
+                        {
+                            printf("\nEither or both usernames not found!");
+                            break;
+                        }
+
+                        remove_edge(adjacency_matrix, &database[idx1], &database[idx2]);
+                        printf("\nConnection removed successfully!");                        
+                    }
+                    else if (ch == 2)
+                    {
+                        printf("\nEnter the account ID for both users : ");
+                        scanf("%d %d", &idx1, &idx2);
+
+                        if (idx1 >= active_accounts || idx2 >= active_accounts)
+                        {
+                            printf("\nEither or both ID's not found!");
+                            break;
+                        }
+
+                        add_edge(adjacency_matrix, &database[idx1], &database[idx2]);
+                        printf("\nConnection removed successfully!");   
+                    }
+                    else
+                    {
+                        printf("\nInvalid choice.");
+                    }
+                    break;
+
+            case 4: printf("\nAccount choices by name(1) or id(2)? Enter choice : ");
+                    scanf("%d", &n);
+
+                    if (n == 1)
+                    {
+                        printf("\nEnter username : ");
+                        scanf("%[^\n]s", name1);
+
+                        idx1 = find_user_index(database, active_accounts, name1);
+                        if (idx1 == -1)
+                        {
+                            printf("\nUsername not founf!");
+                            break;
+                        }
+
+                        display(&database[idx1]);
+                    }
+                    else if (n == 2)
+                    {
+                        printf("\nEnter user ID : ");
+                        scanf("%d", &idx1);
+
+                        if (idx1 >= active_accounts)
+                        {
+                            printf("\nInvalid ID");
+                            break;
+                        }
+
+                        display(&database[idx1]);
+                    }
+                    else
+                    {
+                        printf("\nInvalid choice.");
+                        break;
+                    }
+                    break;
+
+            case 5: printf("\nHow many friends should be displayed maximum? : ");
+                    scanf("%d", &lim);
+
+                    printf("\nAccount choices by name(1) or id(2)? Enter choice : ");
+                    scanf("%d", &n);
+
+                    if (n == 1)
+                    {
+                        printf("\nEnter username : ");
+                        scanf("%[^\n]s", name1);                        
+                        printf("\nEnter username : ");
+
+                        idx1 = find_user_index(database, active_accounts, name1);
+                        if (idx1 == -1)
+                        {
+                            printf("\nUsername not founf!");
+                            break;
+                        }
+
+                        bfs_with_distance(adjacency_matrix, database, active_accounts, &database[idx1], lim);
+                    }
+                    else if (n == 2)
+                    {
+                        printf("\nEnter user ID : ");
+                        scanf("%d", &idx1);
+
+                        if (idx1 >= active_accounts)
+                        {
+                            printf("\nInvalid ID");
+                            break;
+                        }
+
+                        bfs_with_distance(adjacency_matrix, database, active_accounts, &database[idx1], lim);
+                    }
+                    else
+                    {
+                        printf("\nInvalid choice.");
+                        break;
+                    }
+                    break;
+
+            default: return 0;
+
+        }
+    }
 }
 
 void accept(user P)
 {
     printf("enter your name:\n");
-    gets(P->name);
+    scanf(" %[^\n]s", P->name);
     printf("enter your gender:\n");
-    scanf("%s", P->gender);
+    scanf(" %c", &P->gender);
     printf("enter your age:\n");
     scanf("%d", &P->age);
     printf("enter your city:\n");
@@ -58,11 +241,10 @@ void display(user P)
 {
     printf("ID : %d\n", P->id);
     printf("Name :%s\n",P->name);
-	printf("Gender : %s\n",P->gender);
+	printf("Gender : %c\n",P->gender);
 	printf("Age : %d\n",P->age);
 	printf("City : %s\n",P->city);
-    printf("Follower count : %d\n", P->followers);
-    printf("Following count : %d\n", P->following);
+    printf("Friend count : %d\n", P->friends);
 }
 
 
@@ -73,9 +255,10 @@ void add_edge(int matrix[][100], user from, user to)
 
     int from_idx = from->id, to_idx = to->id;
     matrix[from_idx][to_idx] = 1;
+    matrix[to_idx][from_idx] = 1;
 
-    from->following += 1;
-    to->followers += 1;
+    from->friends += 1;
+    to->friends += 1;
 }
 
 void remove_edge(int matrix[][100], user from, user to)
@@ -85,9 +268,10 @@ void remove_edge(int matrix[][100], user from, user to)
 
     int from_idx = from->id, to_idx = to->id;
     matrix[from_idx][to_idx] = 0;
+    matrix[to_idx][from_idx] = 0;
 
-    from->following -= 1;
-    to->followers -= 1;
+    from->friends -= 1;
+    to->friends -= 1;
 }
 
 void convert_to_lower(char *name)
@@ -122,14 +306,8 @@ int find_user_index(struct people data[], int accounts, char *username)
 void display_connections(int matrix[][100], struct people data[], int accounts, user x)
 {
     //print all the names of connections of a user x
-    printf("\nFollowing : ");
-    for (int i = 0, j = 1; i < accounts; i++)
-    {
-        if (matrix[x->id][i] == 1)
-            printf("\n%d. %s", j++, data[i].name);
-    }
 
-    printf("\nFollowers : ");
+    printf("\nConnections of %s : ", x->name);
     for (int i = 0, j = 1; i < accounts; i++)
     {
         if (matrix[i][x->id] == 1)
