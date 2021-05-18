@@ -19,7 +19,7 @@ typedef struct people *user;
 void accept(user P)
 {
     printf("enter your name:\n");
-    scanf("%s", P->name);
+    gets(P->name);
     printf("enter your gender:\n");
     scanf("%s", P->gender);
     printf("enter your age:\n");
@@ -109,6 +109,66 @@ void display_connections(int matrix[][100], struct people data[], int accounts, 
         if (matrix[i][x->id] == 1)
             printf("\n%d. %s", j++, data[i].name);
     }
+}
+
+// if person is not following anyone, returns 1, else 0
+int isNotFollowingAnyone(user x, int matrix[][100], int accounts)
+{
+    int flag = 1;
+    for (int i = 0; i < accounts; i++)
+    {
+        if (matrix[x->id][i] == 1)
+        {
+            flag = 0;
+            break;
+        }
+    }
+
+    return flag;
+}
+
+
+void bfs_with_distance(int matrix[][100], struct people data[], int accounts, user x, int limit)
+{
+    // limit is the max number of suggestions that the user x wants
+    // print the suggested persons name, age, gender and bfs distance from user x
+    if (isNotFollowingAnyone(x, matrix, accounts))
+    {
+        printf("\nYou are not following anyone! Unable to produce suggestions.");
+        return;
+    }
+
+    int visited[100][2] = {0};
+    int queue[200], front = 0, rear = -1;
+
+    queue[++rear] = x->id;
+    visited[x->id][0] = 1;
+    visited[x->id][1] = 0;
+
+    printf("\nSuggestions : ");
+
+    int popped;
+    while (front <= rear && limit != 0)
+    {
+        popped = queue[front++];
+
+        for (int i = 0; i < accounts && limit != 0; i++)
+        {
+            if (matrix[popped][i] == 1 && !visited[i][0])
+            {
+                queue[++rear] = i;
+                visited[i][0] = 1;
+                visited[i][1] = visited[popped][1] + 1;
+
+                if (visited[i][1] > 1)
+                {
+                    printf("%s(%c), %d yrs old. (%d)", data[i].name, data[i].gender, data[i].age, visited[i][1]);
+                    limit--;
+                }
+            }
+        }
+    }
+
 }
 
 int main()

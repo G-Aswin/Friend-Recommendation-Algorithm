@@ -9,7 +9,7 @@ Beginning work:
 5. ~~Display all friends of a given person(based on name/id)~~
 
 6. Print the mutual friends of a user
-7. Print friend suggestions along with distance in bfs of a user.
+7. ~~Print friend suggestions along with distance in bfs of a user.~~
 
 8. Print all the people from a users city (and distance in friendship graph)
 9. Print all the people of the users age group (and distance in friendship graph)
