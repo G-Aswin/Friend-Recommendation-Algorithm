@@ -49,6 +49,10 @@ int main(int argc, char *argv[])
         printf("\n4. Display all friends");
         printf("\n5. **Recommend Friends**");
 
+        printf("\n\n***Master MENU***\n");
+        printf("\n11. Display All Data");
+        printf("\n22. Display Matrix");
+
         printf("\n\n: ");
         scanf("%d", &ch);
 
@@ -224,6 +228,23 @@ int main(int argc, char *argv[])
                     }
                     break;
 
+            case 11:    for (int i = 0; i < active_accounts; i++)
+                        {
+                            display(&database[i]);
+                            printf("\n");
+                        }
+                        break;
+
+            case 22:    for (int i = 0; i < active_accounts; i++)
+                        {
+                            for (int j = 0; j < active_accounts; j++)
+                            {
+                                printf("%d ", adjacency_matrix[i][j]);
+                            }
+                            printf("\n");
+                        }
+                        break;
+
             default: return 0;
 
         }
@@ -338,7 +359,7 @@ void display_connections(int matrix[][100], struct people data[], int accounts, 
     printf("\nConnections of %s : ", x->name);
     for (int i = 0, j = 1; i < accounts; i++)
     {
-        if (matrix[i][x->id] == 1)
+        if (matrix[x->id][i] == 1)
             printf("\n%d. %s", j++, data[i].name);
     }
 }
@@ -377,7 +398,7 @@ void bfs_with_distance(int matrix[][100], struct people data[], int accounts, us
 
                 if (visited[i][1] > 1)
                 {
-                    printf("%s(%c), %d yrs old. (%d)", data[i].name, data[i].gender, data[i].age, visited[i][1]);
+                    printf("\n%s(%c), %d yrs old. (%d)", data[i].name, data[i].gender, data[i].age, visited[i][1]);
                     limit--;
                 }
             }
@@ -399,6 +420,7 @@ void preloadData(int adjacency_matrix[][100], struct people database[], int *act
         fscanf(fp, " %c", &database[i].gender);
         fscanf(fp, "%d", &database[i].age);
         fscanf(fp, "%s", database[i].city);
+        database[i].id = i;
     }
     fclose(fp);
 
