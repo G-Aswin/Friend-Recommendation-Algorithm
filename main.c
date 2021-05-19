@@ -156,12 +156,12 @@ int main(int argc, char *argv[])
                     if (n == 1)
                     {
                         printf("\nEnter username : ");
-                        scanf(" %[^\n]s", name1);
+                        scanf("%s", name1);
 
                         idx1 = find_user_index(database, active_accounts, name1);
                         if (idx1 == -1)
                         {
-                            printf("\nUsername not founf!");
+                            printf("\nUsername not found!");
                             break;
                         }
 
@@ -261,12 +261,13 @@ void accept(user P)
     scanf("%d", &P->age);
     printf("City: ");
     scanf("%s", P->city);
+    P->friends = 0;
 }
 
 void display(user P)
 {
     printf("ID : %d\n", P->id);
-    printf("Name :%s\n",P->name);
+    printf("Name : '%s'\n",P->name);
 	printf("Gender : %c\n",P->gender);
 	printf("Age : %d\n",P->age);
 	printf("City : %s\n",P->city);
@@ -300,28 +301,14 @@ void remove_edge(int matrix[][100], user from, user to)
     to->friends -= 1;
 }
 
-void convert_to_lower(char *name)
-{
-    for (int i = 0; i < strlen(name); i++)
-    {
-        name[i] = tolower(name[i]);
-    }
-}
-
 int find_user_index(struct people data[], int accounts, char *username)
 {
     //returns the index of matching username in the database
-    //checking lower cases
-    convert_to_lower(username);
-    char temp[100];
     
     for (int i = 0; i < accounts; i++)
     {
-        strcpy(temp, data[i].name);
-        convert_to_lower(temp);
-
         // match found, return its index in data array
-        if (strcmp(username, temp) == 0)
+        if (strcasecmp(username, data[i].name) == 0)
             return i;
     }
 
@@ -416,7 +403,7 @@ void preloadData(int adjacency_matrix[][100], struct people database[], int *act
 
     for (int i = 0; i < count; i++)
     {
-        fscanf(fp, " %[^\n]s", database[i].name);
+        fscanf(fp, "%s", database[i].name);
         fscanf(fp, " %c", &database[i].gender);
         fscanf(fp, "%d", &database[i].age);
         fscanf(fp, "%s", database[i].city);
