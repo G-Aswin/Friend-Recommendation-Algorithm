@@ -24,14 +24,19 @@ int find_user_index(struct people data[], int accounts, char *username);
 void display_connections(int matrix[][100], struct people data[], int accounts, user x);
 int isNotFollowingAnyone(user x, int matrix[][100], int accounts);
 void bfs_with_distance(int matrix[][100], struct people data[], int accounts, user x, int limit);
+void preloadData(int adjacency_matrix[][100], struct people database[], int *accounts);
 
-int main()
+int main(int argc, char *argv[])
 {
     struct people database[100];                        //array of struct which actually holds user data
     int adjacency_matrix[100][100] = {0};     //adjacency matrix storing the edge data
     int active_accounts = 0;       // number of active accounts
 
-    char name1[100], name2[100];   
+    char name1[100], name2[100];  
+
+
+    if (argc > 1)
+        preloadData(adjacency_matrix, database, &active_accounts);
 
 
     int ch, n, idx1, idx2, lim;
@@ -61,12 +66,12 @@ int main()
 
             case 2: printf("\nAccount choices by name(1) or id(2)? Enter choice : ");
                     scanf("%d", &n);
-                    if (ch == 1)
+                    if (n == 1)
                     {
                         printf("\nUsername 1 : ");
-                        scanf("%[^\n]s", name1);
+                        scanf(" %[^\n]s", name1);
                         printf("\nUsername 2 : ");
-                        scanf("%[^\n]s", name2);
+                        scanf(" %[^\n]s", name2);
 
                         idx1 = find_user_index(database, active_accounts, name1);
                         idx2 = find_user_index(database, active_accounts, name2);
@@ -80,7 +85,7 @@ int main()
                         add_edge(adjacency_matrix, &database[idx1], &database[idx2]);
                         printf("\nConnection made successfully!");                        
                     }
-                    else if (ch == 2)
+                    else if (n == 2)
                     {
                         printf("\nEnter the account ID for both users : ");
                         scanf("%d %d", &idx1, &idx2);
@@ -102,12 +107,12 @@ int main()
                     
             case 3: printf("\nAccount choices by name(1) or id(2)? Enter choice : ");
                     scanf("%d", &n);
-                    if (ch == 1)
+                    if (n == 1)
                     {
                         printf("\nUsername 1 : ");
-                        scanf("%[^\n]s", name1);
+                        scanf(" %[^\n]s", name1);
                         printf("\nUsername 2 : ");
-                        scanf("%[^\n]s", name2);
+                        scanf(" %[^\n]s", name2);
 
                         idx1 = find_user_index(database, active_accounts, name1);
                         idx2 = find_user_index(database, active_accounts, name2);
@@ -121,7 +126,7 @@ int main()
                         remove_edge(adjacency_matrix, &database[idx1], &database[idx2]);
                         printf("\nConnection removed successfully!");                        
                     }
-                    else if (ch == 2)
+                    else if (n == 2)
                     {
                         printf("\nEnter the account ID for both users : ");
                         scanf("%d %d", &idx1, &idx2);
@@ -147,7 +152,7 @@ int main()
                     if (n == 1)
                     {
                         printf("\nEnter username : ");
-                        scanf("%[^\n]s", name1);
+                        scanf(" %[^\n]s", name1);
 
                         idx1 = find_user_index(database, active_accounts, name1);
                         if (idx1 == -1)
@@ -156,7 +161,7 @@ int main()
                             break;
                         }
 
-                        display(&database[idx1]);
+                        display_connections(adjacency_matrix, database, active_accounts, &database[idx1]);
                     }
                     else if (n == 2)
                     {
@@ -169,7 +174,7 @@ int main()
                             break;
                         }
 
-                        display(&database[idx1]);
+                        display_connections(adjacency_matrix, database, active_accounts, &database[idx1]);
                     }
                     else
                     {
@@ -187,7 +192,7 @@ int main()
                     if (n == 1)
                     {
                         printf("\nEnter username : ");
-                        scanf("%[^\n]s", name1);                        
+                        scanf(" %[^\n]s", name1);                        
                         printf("\nEnter username : ");
 
                         idx1 = find_user_index(database, active_accounts, name1);
@@ -227,13 +232,13 @@ int main()
 
 void accept(user P)
 {
-    printf("enter your name:\n");
+    printf("Name: ");
     scanf(" %[^\n]s", P->name);
-    printf("enter your gender:\n");
+    printf("Gender(M/F): ");
     scanf(" %c", &P->gender);
-    printf("enter your age:\n");
+    printf("Age: ");
     scanf("%d", &P->age);
-    printf("enter your city:\n");
+    printf("City: ");
     scanf("%s", P->city);
 }
 
@@ -303,18 +308,6 @@ int find_user_index(struct people data[], int accounts, char *username)
     return -1;
 }
 
-void display_connections(int matrix[][100], struct people data[], int accounts, user x)
-{
-    //print all the names of connections of a user x
-
-    printf("\nConnections of %s : ", x->name);
-    for (int i = 0, j = 1; i < accounts; i++)
-    {
-        if (matrix[i][x->id] == 1)
-            printf("\n%d. %s", j++, data[i].name);
-    }
-}
-
 // if person is not following anyone, returns 1, else 0
 int isNotFollowingAnyone(user x, int matrix[][100], int accounts)
 {
@@ -331,6 +324,24 @@ int isNotFollowingAnyone(user x, int matrix[][100], int accounts)
     return flag;
 }
 
+
+void display_connections(int matrix[][100], struct people data[], int accounts, user x)
+{
+    //print all the names of connections of a user x
+
+    if (isNotFollowingAnyone(x, matrix, accounts))
+    {
+        printf("\nNo Friends Added!");
+        return;
+    }
+
+    printf("\nConnections of %s : ", x->name);
+    for (int i = 0, j = 1; i < accounts; i++)
+    {
+        if (matrix[i][x->id] == 1)
+            printf("\n%d. %s", j++, data[i].name);
+    }
+}
 
 void bfs_with_distance(int matrix[][100], struct people data[], int accounts, user x, int limit)
 {
@@ -373,4 +384,33 @@ void bfs_with_distance(int matrix[][100], struct people data[], int accounts, us
         }
     }
 
+}
+
+void preloadData(int adjacency_matrix[][100], struct people database[], int *active_accounts)
+{
+    FILE *fp = fopen("database.txt", "r");
+    int count;
+    fscanf(fp, "%d", &count);
+    *active_accounts = count;
+
+    for (int i = 0; i < count; i++)
+    {
+        fscanf(fp, " %[^\n]s", database[i].name);
+        fscanf(fp, " %c", &database[i].gender);
+        fscanf(fp, "%d", &database[i].age);
+        fscanf(fp, "%s", database[i].city);
+    }
+    fclose(fp);
+
+    fp = fopen("matrix_data.txt", "r");
+    fscanf(fp, "%d", &count);           //length of the matrix
+
+    for (int i = 0; i < count; i++)
+    {
+        for (int j = 0; j < count; j++)
+        {
+            fscanf(fp, "%d", &adjacency_matrix[i][j]);
+        }
+    }
+    fclose(fp);
 }
