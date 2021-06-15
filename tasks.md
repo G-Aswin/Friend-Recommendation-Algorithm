@@ -13,3 +13,12 @@ Beginning work:
 
 8. Print all the people from a users city (and distance in friendship graph)
 9. Print all the people of the users age group (and distance in friendship graph)
+
+
+**Review changes**
+
+1. Create hobbies parameter for each person
+2. Suggest friends based on similar hobbies
+3. Change the demo test case to accomodate the new structure
+4. Add more implementation details in the Presentation (struct, friend recommend algorithm)
+5. Add names in the demo test case to make it more readable
