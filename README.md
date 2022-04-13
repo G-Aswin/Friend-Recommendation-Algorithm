@@ -18,10 +18,10 @@ A menu driven C Program written to simulate the workings of a friendship graph.
 
 ## Some functions written in the program
 
-<code>
-1. Add and display a user<br>
-2. Add and remove friends<br>
-3. Display friends of a user<br>
-4. Recommend friends based on mutuals<br>
-5. Recommend friends based on hobbies<br>
-</code>
+<pre><code>
+1. Add and display a user
+2. Add and remove friends
+3. Display friends of a user
+4. Recommend friends based on mutuals
+5. Recommend friends based on hobbies
+</code></pre>
